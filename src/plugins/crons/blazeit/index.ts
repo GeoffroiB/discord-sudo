@@ -11,8 +11,7 @@ class BlazeIt implements CronBindable {
 
     public constructor() {
         this.cron = new CronJob(
-            // "0 20 4,16 * * *",
-            "*/10 * * * * *",
+            "0 20 4,16 * * *",
             ()=>{},
             null,
             true,

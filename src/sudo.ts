@@ -92,4 +92,3 @@ class Sudo extends DiscordJS.Client {
 
 let sudoClient = new Sudo();
 export {sudoClient};
-console.log('OUT THIS BITCH');
