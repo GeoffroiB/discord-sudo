@@ -7,6 +7,7 @@ import onVoiceChannelJoin from "./plugins/listeners/onVoiceChannelJoin";
 import dotenv from "dotenv";
 import {Loader} from "./plugins/loader";
 import {Command} from "./plugins/commands/command";
+import mongoose from "mongoose";
 
 
 class Sudo extends DiscordJS.Client {
@@ -52,9 +53,18 @@ class Sudo extends DiscordJS.Client {
             .on("voiceStateUpdate", this.handleVoiceStateUpdate.bind(this))
         );
 
-        db.init().then(() => {
-            super.login(process.env.TOKEN); // todo
-        });
+        try {
+            db.init().then(() => {
+                super.login(process.env.TOKEN); // todo
+            });
+        } catch (e) {
+            if (!(e instanceof mongoose.Error.MongooseServerSelectionError)) {
+                throw e;
+            }
+            console.log('Could not connect to mongoose DB');
+            process.exit(1);
+        }
+
     }
 
     private handleMessage(message: DiscordJS.Message): void {
