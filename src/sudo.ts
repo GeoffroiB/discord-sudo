@@ -5,7 +5,7 @@ import DiscordJS, {VoiceState} from "discord.js";
 import onVoiceChannelJoin from "./plugins/listeners/onVoiceChannelJoin";
 
 import dotenv from "dotenv";
-import {Loader} from "./plugins/commands/loader";
+import {Loader} from "./plugins/loader";
 import {Command} from "./plugins/commands/command";
 
 
@@ -20,6 +20,7 @@ class Sudo extends DiscordJS.Client {
 
     private loadClientToken(): void {
         dotenv.config();
+        console.log('TOKEN:', process.env.TOKEN);
         if(process.env.TOKEN === undefined) {
             console.error('Missing client token');
             process.exit(1);

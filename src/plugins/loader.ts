@@ -1,11 +1,8 @@
 import * as fs from 'fs';
 import * as path from "path";
-import DiscordJS from 'discord.js';
 
-import {Command, isCommand} from "./command";
-import {CronJob} from "cron";
-import {CronBindable} from "../crons/bindable";
-import {type} from "os";
+import {Command, isCommand} from "./commands/command";
+import {CronBindable} from "./crons/bindable";
 
 
 export class Loader {
