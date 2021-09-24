@@ -55,31 +55,32 @@ class Sudo extends DiscordJS.Client {
         db.init().then(() => {
             super.login(process.env.TOKEN); // todo
         });
-
-
     }
 
     private handleMessage(message: DiscordJS.Message): void {
-        if (message.content) {
-            let message_chunks: string[] = message.content.split(' ');
-            const message_prefix: string|undefined = message_chunks.shift();
-            console.log(`prefix:[${message_prefix}]`);
-            if (message_prefix) {
-                if(Sudo.prefixes.includes(message_prefix)) {
-                    console.log('Message is sudo command');
-                    const command_prefix: string|undefined = message_chunks.shift();
-                    const command: Command|null = this.loader.get(command_prefix);
-                    if (command !== null) {
-                        console.log('Found', command)
-                        command.execute(message, ...message_chunks);// todo
-                    } else {
-                        console.log(`Command '${command_prefix}' not implemented`)
-                    }
-                }
-            } else {
-                console.log(`${message.author.username}: ${message.content}`);
-            }
+        message.content = message.content.trim();
+        if (!message.content) {
+            // Empty message
+            return;
         }
+
+        const message_chunks: string[] = message.content.split(' ');
+        if (message_chunks.length < 2 || !Sudo.prefixes.includes(message_chunks[0].toLowerCase())) {
+            // Not a command
+            console.log(`${message.author.username}: ${message.content}`); // Log message
+            return;
+        }
+
+        const command: Command|null = this.loader.get(message_chunks[1].toLowerCase());
+        if (command === null) {
+            // Not a valid command
+            // TODO: error message?
+            return;
+        }
+
+        command.execute(message, ...message_chunks).then(() => {
+            console.log(`EXECUTED ${message_chunks[1].toLowerCase()} command`);
+        });
     }
 
     private handleVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): void {
